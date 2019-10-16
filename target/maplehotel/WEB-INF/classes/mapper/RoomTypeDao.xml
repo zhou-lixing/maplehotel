@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IRoomTypeDao">
+    <resultMap id="RoomTypeMap" type="RoomType">
+        <id column="roomTypeId" property="roomTypeId"/>
+        <result column="roomTypeNum" property="roomTypeNum"/>
+        <result column="roomTypeName" property="roomTypeName"/>
+        <result column="roomTypeNumber" property="roomTypeNumber"/>
+        <result column="roomTypeRemark" property="roomTypeRemark"/>
+        <result column="roomTypeDel" property="roomTypeDel"/>
+        <result column="roomTypeRE" property="roomTypeRE"/>
+    </resultMap>
+    <resultMap id="RoomTypeRoomMap" type="RoomType" extends="RoomTypeMap">
+        <collection property="rooms" ofType="Room">
+            <id column="roomId" property="roomId"/>
+            <result column="roomNum" property="roomNum"/>
+            <result column="roomType" property="roomType"/>
+            <result column="roomFloor" property="roomFloor"/>
+            <result column="roomStatus" property="roomStatus"/>
+            <result column="roomStandardPrice" property="roomStandardPrice"/>
+            <result column="roomDiscountPrice" property="roomDiscountPrice"/>
+            <result column="roomGoldVipPrice" property="roomGoldVipPrice"/>
+            <result column="roomPlatVipPrice" property="roomPlatVipPrice"/>
+            <result column="roomRemark" property="roomRemark"/>
+            <result column="roomDel" property="roomDel"/>
+            <result column="roomRE" property="roomRE"/>
+        </collection>
+    </resultMap>
+
+    <select id="findRoomTypeByNum" resultMap="RoomTypeMap" parameterType="String">
+        select * from t_roomtype where roomTypeDel=0 and roomTypeNum=#{roomTypeNum}
+    </select>
+    <select id="findRoomTypeAll" resultMap="RoomTypeMap" parameterType="String">
+        select * from t_roomtype where roomTypeDel=0
+    </select>
+    <select id="findRoomByRoomType" resultMap="RoomTypeRoomMap" parameterType="String">
+        SELECT * from t_room a,t_roomtype b
+        WHERE roomDel=0 and roomTypeDel=0 and a.roomType=b.roomTypeNum and b.roomTypeName=#{roomTypeName}
+    </select>
+
+    <insert id="addRoomType" parameterType="RoomType">
+        insert into t_roomtype(roomTypeNum,roomTypeName,roomTypeNumber,roomTypeDel)
+        value (#{roomTypeNum},#{roomTypeName},#{roomTypeNumber},#{roomTypeDel})
+    </insert>
+
+    <update id="deleteRoomType" parameterType="String">
+        update t_roomtype set roomTypeDel=1 where roomTypeDel=0 and roomTypeNum=#{roomTypeNum}
+    </update>
+    <update id="updateByNum" parameterType="String">
+        update t_roomtype set roomTypeRE='住满' where roomTypeDel=0 and roomTypeNum=#{roomTypeNum}
+    </update>
+</mapper>

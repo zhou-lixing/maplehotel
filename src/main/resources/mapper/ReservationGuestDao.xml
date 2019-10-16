@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IReservationGuestDao">
+    <resultMap id="ReservationGuestMap" type="ReservationGuest">
+        <id column="reserveInfoOrderNum" property="reserveInfoOrderNum"/>
+        <result column="reserveInfoRoomNumber" property="reserveInfoRoomNumber"/>
+        <result column="reserveInfoRoomType" property="reserveInfoRoomType"/>
+        <result column="reserveInfoBooker" property="reserveInfoBooker"/>
+        <result column="reserveInfoVipNum" property="reserveInfoVipNum"/>
+        <result column="reserveInfoArrivalTime" property="reserveInfoArrivalTime"/>
+        <result column="reserveInfoLeaveTime" property="reserveInfoLeaveTime"/>
+        <result column="reserveInfoPhone" property="reserveInfoPhone"/>
+    </resultMap>
+
+    <resultMap id="reserveRoomType" type="ReservationGuest" extends="ReservationGuestMap">
+        <association property="roomType" javaType="RoomType">
+            <id column="roomTypeId" property="roomTypeId"/>
+            <result column="roomTypeNum" property="roomTypeNum"/>
+            <result column="roomTypeName" property="roomTypeName"/>
+        </association>
+    </resultMap>
+
+    <select id="findReservationGuestByRoomNum" parameterType="String" resultMap="reserveRoomType">
+        select
+            r.reserveInfoOrderNum,
+            r.reserveInfoRoomNumber,
+            r.reserveInfoRoomType,
+            r.reserveInfoBooker,
+            r.reserveInfoVipNum,
+            r.reserveInfoArrivalTime,
+            r.reserveInfoLeaveTime,
+            r.reserveInfoPhone,
+            rt.roomTypeName
+        from t_reserveinfo r,t_roomtype rt
+        where rt.roomTypeNum=r.reserveInfoRoomType and reserveInfoRoomNumber=#{reserveInfoRoomNumber} and reserveInfoDel=0
+    </select>
+
+    <select id="findReservationGuestByDate" resultMap="reserveRoomType">
+        select
+            r.reserveInfoOrderNum,
+            r.reserveInfoRoomNumber,
+            r.reserveInfoRoomType,
+            r.reserveInfoBooker,
+            r.reserveInfoVipNum,
+            r.reserveInfoArrivalTime,
+            r.reserveInfoLeaveTime,
+            r.reserveInfoPhone,
+            rt.roomTypeName
+        from t_reserveinfo r,t_roomtype rt
+        where rt.roomTypeNum=r.reserveInfoRoomType and reserveInfoArrivalTime&gt;=#{arg0}  and  reserveInfoArrivalTime&lt;=#{arg1} and reserveInfoDel=0
+    </select>
+
+    <select id="findAll" resultMap="reserveRoomType">
+        select
+            r.reserveInfoOrderNum,
+            r.reserveInfoRoomNumber,
+            r.reserveInfoRoomType,
+            r.reserveInfoBooker,
+            r.reserveInfoVipNum,
+            r.reserveInfoArrivalTime,
+            r.reserveInfoLeaveTime,
+            r.reserveInfoPhone,
+            rt.roomTypeName
+        from t_reserveinfo r,t_roomtype rt
+        where rt.roomTypeNum=r.reserveInfoRoomType and reserveInfoDel=0
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

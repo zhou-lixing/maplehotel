@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IFloorDao">
+    <resultMap id="floorMap" type="Floor">
+        <id column="floorId" property="floorId"/>
+        <result column="floorNum" property="floorNum"/>
+        <result column="floorName" property="floorName"/>
+        <result column="floorRemark" property="floorRemark"/>
+        <result column="floorDel" property="floorDel"/>
+        <result column="floorRE" property="floorRE"/>
+    </resultMap>
+    <resultMap id="FloorRoomMap" type="Floor" extends="floorMap">
+        <collection property="rooms" ofType="Room">
+            <id column="roomId" property="roomId"/>
+            <result column="roomNum" property="roomNum"/>
+            <result column="roomType" property="roomType"/>
+            <result column="roomFloor" property="roomFloor"/>
+            <result column="roomStatus" property="roomStatus"/>
+            <result column="roomStandardPrice" property="roomStandardPrice"/>
+            <result column="roomDiscountPrice" property="roomDiscountPrice"/>
+            <result column="roomGoldVipPrice" property="roomGoldVipPrice"/>
+            <result column="roomPlatVipPrice" property="roomPlatVipPrice"/>
+            <result column="roomRemark" property="roomRemark"/>
+            <result column="roomDel" property="roomDel"/>
+            <result column="roomRE" property="roomRE"/>
+        </collection>
+    </resultMap>
+
+    <select id="findFloorByName" resultMap="floorMap" parameterType="String">
+        select * from t_floor where floorDel=0 and  floorName=#{floorName}
+    </select>
+    <select id="findFloorByNum" resultMap="floorMap" parameterType="String">
+        select * from t_floor where floorDel=0 and  floorNum=#{floorNum}
+    </select>
+    <select id="findFloorAll" resultMap="floorMap" parameterType="String">
+        select * from t_floor where floorDel=0
+    </select>
+    <select id="findRoomByFloor" resultMap="FloorRoomMap" parameterType="String">
+        SELECT * from t_room a,t_floor b
+        WHERE roomDel=0 and floorDel=0 and a.roomFloor=b.floorNum and b.floorName=#{floorName}
+    </select>
+    
+    <insert id="addFloor" parameterType="Floor">
+        insert into t_floor(floorNum,floorName,floorDel)
+        value (#{floorNum},#{floorName},#{floorDel})
+    </insert>
+
+    <update id="deleteFloor" parameterType="String">
+        update t_floor set floorDel=1 where floorDel=0 and floorNum=#{floorNum}
+    </update>
+    <update id="updateByNum" parameterType="String">
+        update t_floor set floorRE='无空房' where floorDel=0 and floorNum=#{floorNum}
+    </update>
+</mapper>

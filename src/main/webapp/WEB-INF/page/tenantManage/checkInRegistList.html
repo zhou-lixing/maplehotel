@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+	<!--
+    	作者：offline
+    	时间：2019-09-09
+    	描述：需要改的地方
+    	1.页面标题 DemoPage
+    	2.活动页面 class=active
+    	3.头部导航栏中的页面标题
+    	4.左侧导航中与其他页面链接的href
+    -->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap-clearmin.min.css">
+        <link rel="stylesheet" type="text/css" href="../assets/css/roboto.css">
+        <link rel="stylesheet" type="text/css" href="../assets/css/material-design.css">
+        <link rel="stylesheet" type="text/css" href="../assets/css/small-n-flat.css">
+        <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css">
+        <title>MapleHotel</title>
+    </head>
+    <body class="cm-no-transition cm-1-navbar">
+    	<!--
+        	作者：offline
+        	时间：2019-09-09
+        	描述：左侧导航栏
+        -->
+        <div id="cm-menu">
+            <nav class="cm-navbar cm-navbar-primary">
+                <div class="cm-flex"><a href="../../index.html" class="cm-logo"></a></div>
+                <div class="btn btn-primary md-menu-white" data-toggle="cm-menu"></div>
+            </nav>
+            <div id="cm-menu-content">
+                <div id="cm-menu-items-wrapper">
+                    <div id="cm-menu-scroller">
+                        <ul class="cm-menu-items">
+                            <li><a href="../index/index.do" class="sf-house">主页</a></li>
+                            <li class="cm-submenu pre-open">
+                            	<a href="#" class="sf-profile-group">房客管理<span class="caret"></span></a>
+                            	<ul>
+                                    <li><a href="roomReserve.do">客房预订</a></li>
+                                    <li class="active"><a href="checkInRegistList.do">入住登记</a></li>
+                                    
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="../consume/consumeConsume.do" class="sf-money">消费管理</a>
+                            </li>
+                            <li class="cm-submenu">
+                                <a class="sf-bubbles-alt">基础信息管理<span class="caret"></span></a>
+                                <ul>
+                                	<li>
+                                        <a href="../member/memberView.do">会员</a>
+                                    </li>
+                                    <li>
+                                        <a href="../goods/goodsView.do">商品</a>
+                                    </li>
+                                    <li>
+                                        <a href="../room/roomView.do">客房信息</a>
+                                    </li>
+                                    <li>
+                                        <a href="../goodsType/goodsTypeView.do">商品类别</a>
+                                    </li>
+                                    <li>
+                                        <a href="../roomType/roomTypeView.do">客房类型</a>
+                                    </li>
+                                    <li>
+                                        <a href="../floor/floorView.do">楼层</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="sf-dashboard"></a></li>
+                            <li><a href="../journal/journal.do" class="sf-notepad">日志管理</a></li>
+                            <li class="cm-submenu">
+                            	<a href="#" class="sf-file-excel">报表管理<span class="caret"></span></a>
+                            	<ul>
+                                	<li><a href="../reserve/reserve.do">预定客人报表</a></li>
+                                    <li><a href="../reserve/guestsStaying.do">在住客人报表</a></li>
+                                    <li><a href="../reserve/guestsOutgoing.do">离店客人报表</a></li>
+                                    <li><a href="../reserve/financeAccounting.do">财务进账报表</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        	作者：offline
+        	时间：2019-09-09
+        	描述：头部导航栏
+        -->
+        <header id="cm-header">
+            <nav class="cm-navbar cm-navbar-primary">
+                <div class="btn btn-primary md-menu-white hidden-md hidden-lg" data-toggle="cm-menu"></div>
+                <div class="cm-flex">
+                    <h1>入住登记信息</h1>
+                </div>
+                <div class="dropdown pull-right">
+                    <button class="btn btn-primary md-account-circle-white" data-toggle="dropdown"></button>
+                    <ul class="dropdown-menu">
+                        <li class="disabled text-center">
+                            <a style="cursor:default;"><strong id="user"></strong></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="../user/userInfo.do">
+                                <i class="fa fa-fw fa-user"></i> 用户信息</a>
+                        </li>
+                        <li>
+                            <a href="../user/userSettings.do">
+                                <i class="fa fa-fw fa-cog"></i> 用户管理</a>
+                        </li>
+                        <li>
+                            <a href="../user/logout.do">
+                                <i class="fa fa-fw fa-sign-out"></i> 注销登录</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!--
+        	作者：offline
+        	时间：2019-09-09
+        	描述：页面主要内容
+        -->
+
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">入住详情</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover detailclass">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <!--<button type="button" class="btn btn-primary">确定</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="global">
+
+            <form id="search" action="">
+                <div class="container-fluid cm-container-white" style="display: flex">
+                    <div class="input-group mb-3" style="display: flex">
+                        <input type="text" id="checkInInfoHomeNum" name="checkInInfoHomeNum" class="form-control" placeholder="请输入 房号" style="width: 200px">
+
+
+                    </div>
+
+                    <div class="input-group mb-3" style="display: flex;padding-left: 40px">
+                        <input type="text" id="checkInInfoHuman" name="checkInInfoHuman" class="form-control" placeholder="请输入 入住人" style="width: 200px">
+
+
+                    </div>
+                    <div class="input-group mb-3" style="display: flex;padding-left: 40px">
+                        <select class="form-control" id="checkInInfoRoomType" name="checkInInfoRoomType">
+                            <option value="">请选择</option>
+                            <!--<option value="">单人间</option>
+                            <option value="">双人间</option>
+                            <option value="">四人间</option>
+                            <option value="">总统套房</option>-->
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-search" style="font-weight: bold;width: 50px;margin-left: 5px;">搜索</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="container-fluid">
+            	<!--
+                	作者：offline
+                	时间：2019-09-09
+                	描述：写页面的主要内容
+               -->
+               <div id="body">
+                   <div style="text-align: right;margin-top: 10px;margin-bottom: -35px;">
+                       <a href="checkInRegist.do"><button class="btn btn-primary">登记入住</button></a>
+                   </div>
+                    <div class="text-center mb-4">
+                        <img class="mb-4" src="" alt="">
+                        <h1 class="h3 mb-3 font-weight-normal">房客登记信息</h1>
+                        <p></p>
+                    </div>
+            
+            
+            
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  
+                  <th scope="col">房号</th>
+                  <th scope="col">客房类型</th>
+                  
+                  <th scope="col">入住人</th>
+                  
+                  <th scope="col">联系电话</th>
+                  <th scope="col">抵店时间</th>
+                  <th scope="col">离店时间</th>
+                  <th scope="col">操作</th>
+
+                </tr>
+              </thead>
+              <tbody>
+
+
+              </tbody>
+            </table>
+            
+                </div>
+            </div>
+            <footer class="cm-footer"><span class="pull-left">MapleHotel</span><span class="pull-right">&copy; MapleGroup</span></footer>
+        </div>
+
+        <script src="../assets/js/lib/jquery-2.1.3.min.js"></script>
+        <script src="../assets/js/jquery.mousewheel.min.js"></script>
+        <script src="../assets/js/jquery.cookie.min.js"></script>
+        <script src="../assets/js/fastclick.min.js"></script>
+        <script src="../assets/js/bootstrap.min.js"></script>
+        <script src="../assets/js/clearmin.min.js"></script>
+        <script src="../assets/js/demo/home.js"></script>
+
+        <!--<script>
+            $.ajax({
+                url: "showCheckInInfo.do",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    $.each(response,(i,e) => {
+                        let strTrContent = [
+                            '<td scope="row">', e.checkInInfoCheckInNum, '</td>',
+                            '<td class="center">', e.roomType.roomTypeName, '</td>',
+                            '<td class="center">', e.checkInInfoHuman, '</td>',
+                            '<td class="center">', e.checkInInfoPhone, '</td>',
+                            '<td class="center">', e.checkInInfoArrivalTime, '</td>',
+                            '<td class="center">', e.checkInInfoLeaveTime, '</td>',
+                            '<td class="center">', '<a href="checkInRegist.do" class="btn btn-tbl-edit btn-xs" onclick="del(',e.uid, ')"><i class="fa fa-pencil"></i></a>',
+                            '<a href="changeRoom.do" class="btn btn-tbl-delete btn-xs"><button type="button" class="btn btn-lg btn-primary btn-block" style="height: 35px;width: 55px;font-size: 10px" onclick="del(', e.uid, ')">换房</button></a>',
+                            '<a href="checkOutAccounts.do" class="btn btn-tbl-delete btn-xs"><button type="button" class="btn btn-lg btn-primary btn-block" style="height: 35px;width: 55px;font-size: 10px" onclick="del(', e.uid, ')">结账</button></a>',
+                            '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap" onclick="del(', e.uid, ')">详情</button>',
+
+                            '</td>']
+                        let $tr = $('<tr>' + strTrContent.join('') + '</tr>')
+                        $(".table.table-hover tbody").append($tr);
+                });
+                }
+            });
+
+
+
+            function del(uid){
+                location.href="del?uid="+uid;
+
+            }
+        </script>-->
+
+        <script>
+
+            $(() => {
+
+                findRoomType();
+
+                findRoomCheckIn({number:null,booker:null,type:null});
+
+
+                $('#button-search').click(()=>{
+                    let r1=$('#checkInInfoHomeNum').val()
+                    let r2=$('#checkInInfoHuman').val()
+                    let r3=$('#checkInInfoRoomType').val()
+                    //console.log(r1,r2,r3)
+                    //let $title = $('.table.table-hover').children().eq(0);
+                    $('.table.table-hover tbody').empty();
+
+                    findRoomCheckIn({number:r1,booker:r2,type:r3})
+                })
+
+            })
+
+
+
+
+
+            function del(uid){
+                location.href="del?uid="+uid;
+
+            }
+
+            function findRoomType(){
+                $.ajax({
+                    url: 'findRoomType.do',
+                    dataType: 'json',
+                    success: function(res){
+                        $.each(res,(i,e) => {
+                            //alert(JSON.stringify(e))
+                            $('#checkInInfoRoomType').append(new Option(e.roomTypeName,e.roomTypeNum));
+                        })
+                    }
+                })
+            }
+
+            function findRoomCheckIn(condition){
+                $.ajax({
+                    url: "showCheckInInfoBy.do",
+                    dataType: "json",
+                    data: {number: condition.number ,booker: condition.booker, type: condition.type},
+                    success: function(response) {
+                        $.each(response,(i,e) => {
+                            let strTrContent = [
+                                '<td scope="row">', e.checkInInfoHomeNum, '</td>',
+                                '<td class="center">', e.roomType.roomTypeName, '</td>',
+                                '<td class="center">', e.checkInInfoHuman, '</td>',
+                                '<td class="center">', e.checkInInfoPhone, '</td>',
+                                '<td class="center">', e.checkInInfoArrivalTime, '</td>',
+                                '<td class="center">', e.checkInInfoLeaveTime, '</td>',
+                                '<td class="center">', '<a href="checkInRegist.do" class="btn btn-tbl-edit btn-xs" onclick="del(', , ')"><i class="fa fa-pencil"></i></a>',
+                                '<a href="changeRoom.do" class="btn btn-tbl-delete btn-xs"><button type="button" class="btn btn-lg btn-primary btn-block" style="height: 35px;width: 70px;font-size: 10px" onclick="del(',, ')">换房</button></a>',
+                                '<a href="checkOutAccounts.do" class="btn btn-tbl-delete btn-xs"><button type="button" class="btn btn-lg btn-primary btn-block" style="height: 35px;width: 70px;font-size: 10px" onclick="del(',, ')">结账</button></a>',
+                                '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" data-whatever="@getbootstrap" onmouseover="detail(\'', e.checkInInfoHomeNum, '\')">详情</button>',
+
+                                '</td>']
+                            let $tr = $('<tr>' + strTrContent.join('') + '</tr>')
+                            $(".table.table-hover tbody").append($tr);
+                        });
+                    }
+                });
+            }
+        </script>
+
+
+        <script>
+
+            function detail(roomNum) {
+                $.ajax({
+                    url: "checkInDetail/"+roomNum+".do",
+                    dataType: "json",
+                    success: function(e) {
+                        console.log(e)
+                        $(".detailclass tbody").html("");
+
+                        let strTrContent = [
+                            '<tr scope="row">,<td>房号','</td>','<td>',e.checkInInfoHomeNum,'</td>','</tr>',
+                            '<tr class="center">,<td>客房类型','</td>','<td>',e.roomType.roomTypeName,'</td>','</tr>',
+                            '<tr class="center">,<td>预定人','</td>','<td>',e.checkInInfoHuman,'</td>','</tr>',
+                            '<tr class="center">,<td>联系电话','</td>','<td>',e.checkInInfoPhone,'</td>','</tr>',
+                            '<tr class="center">,<td>抵店时间','</td>','<td>',e.checkInInfoArrivalTime,'</td>','</tr>',
+                            '<tr class="center">,<td>离店人数','</td>','<td>',e.checkInInfoLeaveTime,'</td>','</tr>',
+                            '<tr class="center">,<td>入住人数','</td>','<td>',e.checkInInfoHumanNum,'</td>','</tr>',
+                            '<tr class="center">,<td>身份证号','</td>','<td>',e.checkInInfoCertificateNum,'</td>','</tr>',
+                            '<tr class="center">,<td>会员编号','</td>','<td>',e.checkInInfoVipNum,'</td>','</tr>',
+
+                            '</td>']
+                        let $tr = $('<tr>' + strTrContent.join('') + '</tr>')
+                        $(".detailclass tbody").append($tr);
+
+                    }
+                });
+            }
+
+
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var recipient = button.data('whatever') // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this)
+                modal.find('.modal-title').text('New message to ' + recipient)
+                modal.find('.modal-body input').val(recipient)
+            })
+        </script>
+
+        <script>
+            $.ajax({
+                url: "../user/userInfoContent.do",//请求路径
+                dataType: "json",	//响应类型
+                success: function(response){	//响应成功的回调函数，response响应数据
+                    $("#user").append(response.username);
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IFinanceAccountDao">
+
+    <resultMap id="FinanceAccountMap" type="FinanceAccount">
+        <id column="checkOutCheckInNum" property="checkOutCheckInNum"/>
+        <result column="checkOutHomeNum" property="checkOutHomeNum"/>
+        <result column="checkOutReceive" property="checkOutReceive"/>
+        <result column="checkOutPayMethod" property="checkOutPayMethod"/>
+        <result column="checkOutTime" property="checkOutTime"/>
+
+        <association property="room" javaType="Room">
+            <id column="roomId" property="roomId"/>
+            <result column="roomNum" property="roomNum"/>
+            <result column="roomType" property="roomType"/>
+        </association>
+
+        <association property="roomType" javaType="RoomType">
+            <id column="roomTypeId" property="roomTypeId"/>
+            <result column="roomTypeNum" property="roomTypeNum"/>
+            <result column="roomTypeName" property="roomTypeName"/>
+        </association>
+
+        <association property="checkInInfo" javaType="CheckInInfo">
+            <id column="checkInInfoId" property="checkInInfoId"/>
+            <result column="checkInInfoCheckInNum"  property="checkInInfoCheckInNum"/>
+            <result column="checkInInfoHuman" property="checkInInfoHuman"/>
+            <result column="checkInInfoVipNum" property="checkInInfoVipNum"/>
+        </association>
+
+
+    </resultMap>
+
+
+    <select id="findFinanceAccountByDate" resultMap="FinanceAccountMap">
+        SELECT
+            cko.checkOutCheckInNum,
+            cko.checkOutHomeNum,
+            rt.roomTypeName,
+            cki.checkInInfoHuman,
+            cki.checkInInfoVipNum,
+            cko.checkOutReceive,
+            cko.checkOutPayMethod,
+            cko.checkOutTime
+        FROM t_checkininfo cki,t_roomtype rt,t_checkout cko,t_room r
+        where cki.checkInInfoDel=0 and rt.roomTypeDel=0 and cko.checkOutDel=0 AND
+            cko.checkOutCheckInNum=cki.checkInInfoCheckInNum and cko.checkOutHomeNum=r.roomNumber and r.roomType=rt.roomTypeNum
+          and cko.checkOutTime&gt;#{arg0} and cko.checkOutTime&lt;#{arg1}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

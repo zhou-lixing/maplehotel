@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.IChangeRoomDao">
+
+    <resultMap id="changeMap" type="ChangeRoom">
+        <id column="changeHomeId" property="changeHomeId"/>
+        <result column="changeHomeCheckInNum" property="changeHomeCheckInNum"/>
+        <result column="changeHomeBeforeHomeNum" property="changeHomeBeforeHomeNum"/>
+        <result column="changeHomeAfterHomeNum" property="changeHomeAfterHomeNum"/>
+        <result column="changeHomeRoomType" property="changeHomeRoomType"/>
+        <result column="changeHomeStandardPrice" property="changeHomeStandardPrice"/>
+        <result column="changeHomeDiscountPrice" property="changeHomeDiscountPrice"/>
+        <result column="changeHomeDeposit" property="changeHomeDeposit"/>
+        <result column="changeHomeHuman" property="changeHomeHuman"/>
+        <result column="changeHomeCertificateType" property="changeHomeCertificateType"/>
+        <result column="changeHomeCertificateNum" property="changeHomeCertificateNum"/>
+        <result column="changeHomePhone" property="changeHomePhone"/>
+        <result column="changeHomeArrivalTime" property="changeHomeArrivalTime"/>
+        <result column="changeHomeLeaveTime" property="changeHomeLeaveTime"/>
+        <result column="changeHomeHumanNum" property="changeHomeHumanNum"/>
+        <result column="changeHomeOperator" property="changeHomeOperator"/>
+        <result column="changeHomeVipNum" property="changeHomeVipNum"/>
+        <result column="changeHomeVipPrice" property="changeHomeVipPrice"/>
+        <result column="changeHomeBreakfast" property="changeHomeBreakfast"/>
+        <result column="changeHomeWakeUp" property="changeHomeWakeUp"/>
+        <result column="changeHomeRemark" property="changeHomeRemark"/>
+        <result column="changeHomeDel" property="changeHomeDel"/>
+
+    </resultMap>
+    <resultMap id="changeRomeTypeAndUserMap" type="ChangeRoom" extends="changeMap">
+        <association property="roomType" javaType="RoomType">
+            <id column="roomTypeId" property="roomTypeId"/>
+            <result column="roomTypeNum" property="roomTypeNum"/>
+            <result column="roomTypeName" property="roomTypeName"/>
+            <result column="roomTypeNumber" property="roomTypeNumber"/>
+            <result column="roomTypeRemark" property="roomTypeRemark"/>
+            <result column="roomTypeDel" property="roomTypeDel"/>
+        </association>
+        <association property="user" javaType="User">
+            <id column="userId" property="userId"/>
+            <result column="userIdentifier" property="userIdentifier"/>
+            <result column="userUsername" property="userUsername"/>
+            <result column="userPassword" property="userPassword"/>
+            <result column="userPower" property="userPower"/>
+            <result column="userRemark" property="userRemark"/>
+            <result column="userDel" property="userDel"/>
+        </association>
+    </resultMap>
+    <update id="addToChange" parameterType="ChangeRoom">
+        insert into t_changehome
+        values(default,#{changeHomeCheckInNum},#{changeHomeBeforeHomeNum},#{changeHomeAfterHomeNum},
+               #{changeHomeRoomType},#{changeHomeStandardPrice},#{changeHomeDiscountPrice},#{changeHomeDeposit},
+               #{changeHomeHuman},#{changeHomeCertificateType},#{changeHomeCertificateNum},#{changeHomePhone},
+               #{changeHomeArrivalTime},#{changeHomeLeaveTime},#{changeHomeHumanNum},#{changeHomeOperator},
+               #{changeHomeVipNum},#{changeHomeVipPrice},#{changeHomeBreakfast},#{changeHomeWakeUp},#{changeHomeRemark},
+               #{changeHomeDel},null)
+    </update>
+
+    <select id="findByHomeNum" parameterType="String" resultMap="changeRomeTypeAndUserMap">
+        select * from t_changehome ch,t_roomtype rt,t_user u
+        where ch.changeHomeRomeType=rt.roomTypeNum and ch.changeHomeOperator=u.userIdentifier
+        and ch.changeHomeDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and ch.changeHomeAfterHomeNum=#{ch.changeHomeAfterHomeNum};
+    </select>
+
+</mapper>
+

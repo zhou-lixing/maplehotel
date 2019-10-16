@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.IRoomReserveDao">
+
+    <resultMap id="reserveMap" type="ReserveInfo">
+        <id column="reserveInfoId" property="reserveInfoId"/>
+        <result column="reserveInfoOrderNum" property="reserveInfoOrderNum"/>
+        <result column="reserveInfoRoomNumber" property="reserveInfoRoomNumber"/>
+        <result column="reserveInfoRoomType" property="reserveInfoRoomType"/>
+        <result column="reserveInfoStandardPrice" property="reserveInfoStandardPrice"/>
+        <result column="reserveInfoDiscount" property="reserveInfoDiscount"/>
+        <result column="reserveInfoDeposit" property="reserveInfoDeposit"/>
+        <result column="reserveInfoBooker" property="reserveInfoBooker"/>
+        <result column="reserveInfoIdType" property="reserveInfoIdType"/>
+        <result column="reserveInfoIdNumber" property="reserveInfoIdNumber"/>
+        <result column="reserveInfoPhone" property="reserveInfoPhone"/>
+        <result column="reserveInfoArrivalTime" property="reserveInfoArrivalTime"/>
+        <result column="reserveInfoLeaveTime" property="reserveInfoLeaveTime"/>
+        <result column="reserveInfoHumanNum" property="reserveInfoHumanNum"/>
+        <result column="reserveInfoOperator" property="reserveInfoOperator"/>
+        <result column="reserveInfoVipNum" property="reserveInfoVipNum"/>
+        <result column="reserveInfoVipPrice" property="reserveInfoVipPrice"/>
+        <result column="reserveInfoStatus" property="reserveInfoStatus"/>
+        <result column="reserveInfoRemark" property="reserveInfoRemark"/>
+        <result column="reserveInfoDel" property="reserveInfoDel"/>
+
+    </resultMap>
+    
+    <resultMap id="reserveRomeTypeAndUserMap" type="ReserveInfo" extends="reserveMap">
+        <association property="roomType" javaType="RoomType">
+            <id column="roomTypeId" property="roomTypeId"/>
+            <result column="roomTypeNum" property="roomTypeNum"/>
+            <result column="roomTypeName" property="roomTypeName"/>
+            <result column="roomTypeNumber" property="roomTypeNumber"/>
+            <result column="roomTypeRemark" property="roomTypeRemark"/>
+            <result column="roomTypeDel" property="roomTypeDel"/>
+        </association>
+        <association property="user" javaType="User">
+            <id column="userId" property="userId"/>
+            <result column="userIdentifier" property="userIdentifier"/>
+            <result column="userUsername" property="userUsername"/>
+            <result column="userPassword" property="userPassword"/>
+            <result column="userPower" property="userPower"/>
+            <result column="userRemark" property="userRemark"/>
+            <result column="userDel" property="userDel"/>
+        </association>
+    </resultMap>
+
+
+    <update id="addReserve" parameterType="ReserveInfo" >
+        insert into t_reserveinfo
+        values(#{reserveInfoId},#{reserveInfoOrderNum},#{reserveInfoRoomNumber},#{reserveInfoRoomType},
+               #{reserveInfoStandardPrice},#{reserveInfoDiscount},#{reserveInfoDeposit},#{reserveInfoBooker},
+               #{reserveInfoIdType},#{reserveInfoIdNumber},#{reserveInfoPhone},#{reserveInfoArrivalTime},
+               #{reserveInfoLeaveTime},#{reserveInfoHumanNum},#{reserveInfoOperator},#{reserveInfoVipNum},
+               #{reserveInfoVipPrice},#{reserveInfoStatus},#{reserveInfoRemark} ,#{reserveInfoDel},null);
+    </update>
+
+    <update id="delReserve" parameterType="String" >
+        update t_reserveinfo set reserveInfoDel=1 WHERE reserveInfoDel=0 and reserveInfoRoomNumber=#{reserveInfoRoomNumber};
+    </update>
+
+    <update id="updateReserve" parameterType="String">
+        update t_reserveinfo set reserveInfoRoomNumber=#{reserveInfoRoomNumber} where reserveInfoDel=0 and reserveInfoRoomNumber='302';
+    </update>
+
+    <select id="findMaxIdOfOrderNum" resultType="String">
+        select reserveInfoOrderNum from t_reserveinfo
+        where reserveInfoId=(select max(reserveInfoId) from t_reserveinfo where reserveInfoDel=0)
+    </select>
+
+    <select id="findReserveByRoomNumber" parameterType="String" resultMap="reserveRomeTypeAndUserMap">
+        select * from t_reserveinfo ri,t_roomtype rt,t_user u
+        where ri.reserveInfoRoomType=rt.roomTypeNum and ri.reserveInfoOperator=u.userIdentifier
+        and ri.reserveInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and reserveInfoRoomNumber=#{reserveInfoRoomNumber};
+    </select>
+
+    <select id="findReserveByBooker" parameterType="String" resultMap="reserveRomeTypeAndUserMap">
+        select * from t_reserveinfo ri,t_roomtype rt,t_user u
+        where ri.reserveInfoRoomType=rt.roomTypeNum and ri.reserveInfoOperator=u.userIdentifier
+        and ri.reserveInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and reserveInfoBooker=#{reserveInfoBooker};
+    </select>
+    
+    <select id="findReserveByType" parameterType="String" resultMap="reserveRomeTypeAndUserMap">
+        select * from t_reserveinfo ri,t_roomtype rt,t_user u
+        where ri.reserveInfoRoomType=rt.roomTypeNum and ri.reserveInfoOperator=u.userIdentifier
+        and ri.reserveInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and reserveInfoRoomType=#{reserveInfoRoomType};
+    </select>
+
+    <select id="findAllReserve" resultMap="reserveRomeTypeAndUserMap">
+        select * from t_reserveinfo ri,t_roomtype rt,t_user u
+        where ri.reserveInfoRoomType=rt.roomTypeNum and ri.reserveInfoOperator=u.userIdentifier
+        and ri.reserveInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0;
+    </select>
+
+
+    <select id="find" parameterType="map" resultMap="reserveRomeTypeAndUserMap">
+        select * from t_reserveinfo ri,t_roomtype rt,t_user u
+        <where>
+            ri.reserveInfoRoomType=rt.roomTypeNum and ri.reserveInfoOperator=u.userIdentifier
+            <if test="number != null and number != ''">
+                and reserveInfoRoomNumber=#{number}
+            </if>
+            <if test="booker != null and booker != ''">
+                and reserveInfoBooker=#{booker}
+            </if>
+            <if test="type != null and type != ''">
+                and reserveInfoRoomType=#{type}
+            </if>
+        </where>
+        and ri.reserveInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0;
+
+    </select>
+
+    <update id="cancelReserveStatus" parameterType="String">
+        update t_reserveinfo set reserveInfoStatus="取消预订"
+        WHERE reserveInfoDel=0 and reserveInfoRoomNumber=#{reserveInfoRoomNumber};
+    </update>
+
+
+</mapper>
+

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.ICheckOutAccountsDao">
+
+    <resultMap id="checkOutMap" type="CheckOutAccounts">
+        <id column="checkOutId" property="checkOutId"/>
+        <result column="checkOutCheckInNum" property="checkOutCheckInNum"/>
+        <result column="checkOutHomeNum" property="checkOutHomeNum"/>
+        <result column="checkOutHomePrice" property="checkOutHomePrice"/>
+        <result column="checkOutDeposit" property="checkOutDeposit"/>
+        <result column="checkOutDayNum" property="checkOutDayNum"/>
+        <result column="checkOutHotelPrice" property="checkOutHotelPrice"/>
+        <result column="checkOutInStoreConsume" property="checkOutInStoreConsume"/>
+        <result column="checkOutMealPrice" property="checkOutMealPrice"/>
+        <result column="checkOutPhonePrice" property="checkOutPhonePrice"/>
+        <result column="checkOutShouldReceive" property="checkOutShouldReceive"/>
+        <result column="checkOutShouldRefund" property="checkOutShouldRefund"/>
+        <result column="checkOutPayMethod" property="checkOutPayMethod"/>
+        <result column="checkOutReceive" property="checkOutReceive"/>
+        <result column="checkOutGiveChange" property="checkOutGiveChange"/>
+        <result column="checkOutOperator" property="checkOutOperator"/>
+        <result column="checkOutRemark" property="checkOutRemark"/>
+        <result column="checkOutDEl" property="checkOutDEl"/>
+        <result column="checkOutTime" property="checkOutTime"/>
+    </resultMap>
+
+    <resultMap id="checkOutConsumesAndUserMap" type="CheckOutAccounts" extends="checkOutMap">
+        <association property="user" javaType="User">
+            <id column="userId" property="userId"/>
+            <result column="userIdentifier" property="userIdentifier"/>
+            <result column="userUsername" property="userUsername"/>
+            <result column="userPassword" property="userPassword"/>
+            <result column="userPower" property="userPower"/>
+            <result column="userRemark" property="userRemark"/>
+            <result column="userDel" property="userDel"/>
+        </association>
+
+        <collection property="consumes" ofType="Consume">
+            <id column="consumeId" property="consumeId"/>
+            <result column="consumeCheckInNum" property="consumeCheckInNum"/>
+            <result column="consumeHomeNum" property="consumeHomeNum"/>
+            <result column="consumeGoodsName" property="consumeGoodsName"/>
+            <result column="consumeCount" property="consumeCount"/>
+            <result column="consumePrice" property="consumePrice"/>
+            <result column="consumeMoney" property="consumeMoney"/>
+            <result column="consumeDiscountRate" property="consumeDiscountRate"/>
+            <result column="consumeDiscountPrice" property="consumeDiscountPrice"/>
+            <result column="consumeTotal" property="consumeTotal"/>
+            <result column="consumeOperator" property="consumeOperator"/>
+            <result column="consumeTime" property="consumeTime"/>
+            <result column="consumeRemark" property="consumeRemark"/>
+            <result column="consumeDel" property="consumeDel"/>
+        </collection>
+    </resultMap>
+
+    <update id="addToCheckOut" parameterType="CheckOutAccounts">
+      insert into t_checkout
+      values (default,#{checkOutCheckInNum},#{checkOutHomeNum},#{checkOutHomePrice},#{checkOutDeposit},
+              #{checkOutDayNum},#{checkOutHotelPrice},null ,#{checkOutMealPrice},#{checkOutPhonePrice},
+              #{checkOutShouldReceive},#{checkOutShouldRefund},#{checkOutPayMethod},#{checkOutReceive},
+              #{checkOutGiveChange},#{checkOutOperator},#{checkOutRemark},#{checkOutDEl},null ,now())
+    </update>
+
+    <select id="findMaxIdOfNum" resultType="String">
+        select checkOutCheckInNum from t_checkout
+        where checkOutId=(select max(checkOutId) from t_checkout where checkOutDel=0)
+    </select>
+
+    <select id="findByHomeNum" parameterType="String" resultMap="checkOutConsumesAndUserMap">
+        select * from t_checkout co,t_consume cs,t_user u
+        where co.checkOutHomeNum=cs.consumeHomeNum and co.checkOutOperator=u.userIdentifier
+        and co.checkOutDEl=0 and cs.consumeDel=0 and u.userDel=0
+        and co.checkOutHomeNum=#{co.checkOutHomeNum};
+    </select>
+
+
+</mapper>
+

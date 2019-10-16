@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IGuestsStayingDao">
+    <resultMap id="GuestsStayingMap" type="GuestsStaying">
+        <id column="checkInInfoCheckInNum" property="checkInInfoCheckInNum"/>
+        <result column="checkInInfoHomeNum" property="checkInInfoHomeNum"/>
+        <result column="checkInInfoRoomType" property="checkInInfoRoomType"/>
+        <result column="checkInInfoHuman" property="checkInInfoHuman"/>
+        <result column="checkInInfoVipNum" property="checkInInfoVipNum"/>
+        <result column="checkInInfoArrivalTime" property="checkInInfoArrivalTime"/>
+        <result column="checkInInfoLeaveTime" property="checkInInfoLeaveTime"/>
+        <result column="checkInInfoPhone" property="checkInInfoPhone"/>
+    </resultMap>
+
+    <resultMap id="GuestsStayingRoomMap" type="GuestsStaying" extends="GuestsStayingMap">
+        <association property="roomType" javaType="RoomType">
+            <id column="roomTypeId" property="roomTypeId"/>
+            <result column="roomTypeNum" property="roomTypeNum"/>
+            <result column="roomTypeName" property="roomTypeName"/>
+        </association>
+    </resultMap>
+
+
+    <select id="findGuestsStayingByHomeNum" parameterType="String" resultMap="GuestsStayingRoomMap">
+        SELECT
+            cki.checkInInfoCheckInNum,
+            cki.checkInInfoHomeNum,
+            cki.checkInInfoRoomType,
+            cki.checkInInfoHuman,
+            cki.checkInInfoVipNum,
+            cki.checkInInfoArrivalTime,
+            cki.checkInInfoLeaveTime,
+            cki.checkInInfoPhone,
+            rt.roomTypeName
+        FROM t_checkininfo cki,t_roomtype rt
+        WHERE rt.roomTypeNum=cki.checkInInfoRoomType and checkInInfoHomeNum=#{checkInInfoHomeNum} and checkInInfoDel=0
+    </select>
+
+    <select id="findGuestsStayingByDate" resultMap="GuestsStayingRoomMap">
+        SELECT
+            cki.checkInInfoCheckInNum,
+            cki.checkInInfoHomeNum,
+            cki.checkInInfoRoomType,
+            cki.checkInInfoHuman,
+            cki.checkInInfoVipNum,
+            cki.checkInInfoArrivalTime,
+            cki.checkInInfoLeaveTime,
+            cki.checkInInfoPhone,
+            rt.roomTypeName
+        FROM t_checkininfo cki,t_roomtype rt
+        where rt.roomTypeNum=cki.checkInInfoRoomType and cki.checkInInfoArrivalTime&gt;=#{arg0}  and cki.checkInInfoArrivalTime&lt;=#{arg1} and cki.checkInInfoDel=0
+    </select>
+
+    <select id="findAll" resultMap="GuestsStayingRoomMap">
+        select
+            cki.checkInInfoCheckInNum,
+            cki.checkInInfoHomeNum,
+            cki.checkInInfoRoomType,
+            cki.checkInInfoHuman,
+            cki.checkInInfoVipNum,
+            cki.checkInInfoArrivalTime,
+            cki.checkInInfoLeaveTime,
+            cki.checkInInfoPhone,
+            rt.roomTypeName
+        FROM t_checkininfo cki,t_roomtype rt
+        where rt.roomTypeNum=cki.checkInInfoRoomType and cki.checkInInfoDel=0
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

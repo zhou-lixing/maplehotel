@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IConsumeDao">
+
+    <resultMap id="ConsumeMap" type="Consume">
+        <id column="consumeId" property="consumeId"/>
+        <result column="consumeCheckInNum" property="consumeCheckInNum"/>
+        <result column="consumeHomeNum" property="consumeHomeNum"/>
+        <result column="consumeGoodsName" property="consumeGoodsName"/>
+        <result column="consumeCount" property="consumeCount"/>
+        <result column="consumePrice" property="consumePrice"/>
+        <result column="consumeMoney" property="consumeMoney"/>
+        <result column="consumeDiscountRate" property="consumeDiscountRate"/>
+        <result column="consumeDiscountPrice" property="consumeDiscountPrice"/>
+        <result column="consumeTotal" property="consumeTotal"/>
+        <result column="consumeTime" property="consumeTime"/>
+        <result column="consumeOperator" property="consumeOperator"/>
+        <result column="consumeRemark" property="consumeRemark"/>
+        <result column="consumeDel" property="consumeDel"/>
+        <result column="consumeRE" property="consumeRE"/>
+    </resultMap>
+
+    <!--<resultMap id="consumeGoodsTypeMap" type="Consume" extends="ConsumeMap">-->
+        <!--<collection property="goodsTypes" ofType="GoodsType">-->
+            <!--<id column="goodsTypeId" property="goodsTypeId"/>-->
+            <!--<result column="goodsTypeNum" property="goodsTypeNum"/>-->
+            <!--<result column="goodsTypeName" property="goodsTypeName"/>-->
+            <!--<result column="goodsTypeRemark" property="goodsTypeRemark"/>-->
+            <!--<result column="goodsTypeDel" property="goodsTypeDel"/>-->
+            <!--<result column="goodsTypeRE" property="goodsTypeRE"/>-->
+        <!--</collection>-->
+
+    <!--</resultMap>-->
+
+    <resultMap id="consumeGoodsMap" type="Consume" extends="ConsumeMap">
+        <collection property="goods" ofType="Goods">
+            <id column="goodsId" property="goodsId"/>
+            <result column="goodsNum" property="goodsNum"/>
+            <result column="goodsName" property="goodsName"/>
+            <result column="goodsType" property="goodsType"/>
+            <result column="goodsPrice" property="goodsPrice"/>
+            <result column="goodsUnit" property="goodsUnit"/>
+            <result column="goodsRemark" property="goodsRemark"/>
+            <result column="goodsDel" property="goodsDel"/>
+            <result column="goodsRE" property="goodsRE"/>
+        </collection>
+    </resultMap>
+
+
+    <!--<select id="findGoods" parameterType="String" resultMap="consumeGoodsMap">-->
+        <!--SELECT * from t_goods a,t_goodstype b WHERE goodsDel=0-->
+                                                <!--and goodsTypeDel=0-->
+                                                <!--and a.goodsType=b.goodsTypeNumber-->
+                                                <!--and b.goodsTypeName=#{goodsTypeName}-->
+    <!--</select>-->
+
+    <!-->查询消费信息<!-->
+    <select id="findConsumeList" parameterType="String" resultMap="consumeGoodsMap">
+        SELECT * FROM t_consume a,t_goods b WHERE
+            consumeDel=0 AND consumeHomeNum=#{consumeHomeNum}
+            AND a.consumeGoodsName=b.goodsNum
+    </select>
+    <!--查询所有消费信息-->
+    <select id="findConsumeAll" resultMap="consumeGoodsMap">
+        SELECT * FROM t_consume a, t_goods b
+        WHERE consumeDel=0
+        and a.consumeGoodsName=b.goodsNum
+    </select>
+    <!-->打印消费信息<!-->
+    <select id="printingConsumeList" parameterType="String" resultMap="consumeGoodsMap">
+        SELECT * FROM t_consume a,t_goods b WHERE
+            consumeDel=0 AND consumeHomeNum=#{consumeHomeNum}
+              AND a.consumeGoodsName=b.goodsNum
+    </select>
+    <!-->消费入账<!-->
+    <update id="moneyInto" parameterType="Consume">
+        INSERT into t_consume
+          VALUES(
+            DEFAULT,#{consumeCheckInNum},#{consumeHomeNum},#{consumeGoodsName},#{consumeCount},
+            #{consumePrice},#{consumeMoney},#{consumeDiscountRate},#{consumeDiscountPrice},
+            #{consumeTotal},#{consumeOperator},now(),#{consumeRemark},#{consumeDel},#{consumeRE}
+        )
+    </update>
+    <!-->修改消费信息<!-->
+    <update id="changeConsume" parameterType="Consume">
+        UPDATE t_consume set
+                             consumeCount=#{consumeCount},
+                             consumeDiscountRate=#{consumeDiscountRate},
+                             consumePrice=#{consumePrice},
+                             consumeTotal=#{consumeTotal}
+        WHERE consumeHomeNum=#{consumeHomeNum} AND consumeGoodsName=#{consumeGoodsName}
+                AND consumeDel=0
+    </update>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

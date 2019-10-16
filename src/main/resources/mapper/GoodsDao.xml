@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IGoodsDao">
+    <resultMap id="goodsMap" type="Goods">
+        <id column="goodsId" property="goodsId"/>
+        <result column="goodsNum" property="goodsNum"/>
+        <result column="goodsCount" property="goodsCount"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="goodsType" property="goodsType"/>
+        <result column="goodsPrice" property="goodsPrice"/>
+        <result column="goodsUnit" property="goodsUnit"/>
+        <result column="goodsRemark" property="goodsRemark"/>
+        <result column="goodsDel" property="goodsDel"/>
+        <result column="goodsRE" property="goodsRE"/>
+    </resultMap>
+    <resultMap id="goodsGoodsTypeMap" type="Goods" extends="goodsMap">
+        <association property="type" javaType="GoodsType">
+            <id column="goodsTypeId" property="goodsTypeId"/>
+            <result column="goodsTypeNum" property="goodsTypeNum"/>
+            <result column="goodsTypeName" property="goodsTypeName"/>
+        </association>
+    </resultMap>
+
+    <select id="findGoodsByName" resultMap="goodsMap" parameterType="String">
+        select * from t_goods where goodsDel=0 and goodsName=#{goodsName}
+    </select>
+    <select id="findGoodsByNum" resultMap="goodsMap" parameterType="String">
+        select * from t_goods where goodsDel=0 and goodsNum=#{goodsNum}
+    </select>
+    <select id="findByType" resultMap="goodsMap" parameterType="String">
+        select * from t_goods where goodsDel=0 and goodsType=#{goodsType}
+    </select>
+    <select id="findGoodsAll" resultMap="goodsGoodsTypeMap" parameterType="String">
+        select * from t_goods a,t_goodstype b where a.goodsDel=0 and a.goodsType=b.goodsTypeNumber
+    </select>
+    <select id="findMaxNum" resultType="String" parameterType="String">
+        select goodsNum from t_goods where goodsDel=0 and goodsId=(select max(goodsId) from t_goods)
+    </select>
+
+    <update id="addGoods" parameterType="Goods">
+        insert into t_goods(goodsNum,goodsName,goodsType,goodsPrice,goodsUnit,goodsDel)
+        value (#{goodsNum},#{goodsName},#{goodsType},#{goodsPrice},#{goodsUnit},#{goodsDel})
+    </update>
+
+    <update id="deleteGoods" parameterType="String">
+        update t_goods set goodsDel=1 where goodsDel=0 and goodsNum=#{goodsNum}
+    </update>
+    <update id="updateByNum" parameterType="String">
+        update t_goods set goodsRE='售空' where goodsDel=0 and goodsNum=#{goodsNum}
+    </update>
+</mapper>

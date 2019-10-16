@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.ICheckInRegistDao">
+
+    <resultMap id="checkInMap" type="CheckInInfo">
+        <id column="checkInInfoId" property="checkInInfoId"/>
+        <result column="checkInInfoCheckInNum" property="checkInInfoCheckInNum"/>
+        <result column="checkInInfoHomeNum" property="checkInInfoHomeNum"/>
+        <result column="checkInInfoRoomType" property="checkInInfoRoomType"/>
+        <result column="checkInInfoStandardPrice" property="checkInInfoStandardPrice"/>
+        <result column="checkInInfoDiscountPrice" property="checkInInfoDiscountPrice"/>
+        <result column="checkInInfoDeposit" property="checkInInfoDeposit"/>
+        <result column="checkInInfoHuman" property="checkInInfoHuman"/>
+        <result column="checkInInfoCertificateType" property="checkInInfoCertificateType"/>
+        <result column="checkInInfoCertificateNum" property="checkInInfoCertificateNum"/>
+        <result column="checkInInfoPhone" property="checkInInfoPhone"/>
+        <result column="checkInInfoArrivalTime" property="checkInInfoArrivalTime"/>
+        <result column="checkInInfoLeaveTime" property="checkInInfoLeaveTime"/>
+        <result column="checkInInfoHumanNum" property="checkInInfoHumanNum"/>
+        <result column="checkInInfoOperator" property="checkInInfoOperator"/>
+        <result column="checkInInfoVipNum" property="checkInInfoVipNum"/>
+        <result column="checkInInfoVipPrice" property="checkInInfoVipPrice"/>
+        <result column="checkInInfoBreakfast" property="checkInInfoBreakfast"/>
+        <result column="checkInInfoWakeUp" property="checkInInfoWakeUp"/>
+        <result column="checkInInfoRemark" property="checkInInfoRemark"/>
+        <result column="checkInInfoDel" property="checkInInfoDel"/>
+
+    </resultMap>
+
+    <resultMap id="checkInRomeTypeAndUserMap" type="CheckInInfo" extends="checkInMap">
+        <association property="roomType" javaType="RoomType">
+            <id column="roomTypeId" property="roomTypeId"/>
+            <result column="roomTypeNum" property="roomTypeNum"/>
+            <result column="roomTypeName" property="roomTypeName"/>
+            <result column="roomTypeNumber" property="roomTypeNumber"/>
+            <result column="roomTypeRemark" property="roomTypeRemark"/>
+            <result column="roomTypeDel" property="roomTypeDel"/>
+        </association>
+        <association property="user" javaType="User">
+            <id column="userId" property="userId"/>
+            <result column="userIdentifier" property="userIdentifier"/>
+            <result column="userUsername" property="userUsername"/>
+            <result column="userPassword" property="userPassword"/>
+            <result column="userPower" property="userPower"/>
+            <result column="userRemark" property="userRemark"/>
+            <result column="userDel" property="userDel"/>
+        </association>
+    </resultMap>
+
+    <update id="addCheckIn" parameterType="CheckInInfo" >
+        insert into t_checkininfo
+        values(#{checkInInfoId},#{checkInInfoCheckInNum},#{checkInInfoHomeNum},#{checkInInfoRoomType},
+               #{checkInInfoStandardPrice},#{checkInInfoDiscountPrice},#{checkInInfoDeposit},#{checkInInfoHuman},
+               #{checkInInfoCertificateType},#{checkInInfoCertificateNum},#{checkInInfoPhone},#{checkInInfoArrivalTime},
+               #{checkInInfoLeaveTime},#{checkInInfoHumanNum},#{checkInInfoOperator},#{checkInInfoVipNum},
+               #{checkInInfoVipPrice},#{checkInInfoBreakfast},#{checkInInfoWakeUp} ,#{checkInInfoRemark},#{checkInInfoDel},null);
+    </update>
+
+    <update id="delCheckIn" parameterType="String" >
+        update t_checkininfo set checkInInfoDel=1 WHERE checkInInfoDel=0 and checkInInfoHomeNum=#{checkInInfoHomeNum};
+    </update>
+
+    <update id="updateCheckIn" parameterType="String">
+        update t_checkininfo set checkInInfoHomeNum=#{checkInInfoHomeNum} where checkInInfoDel=0 and  checkInInfoHomeNum='106';
+    </update>
+
+    <select id="findMaxIdOfCheckInNum" resultType="String">
+        select checkInInfoCheckInNum from t_checkininfo
+        where checkInInfoId=(select max(checkInInfoId) from t_checkininfo where checkInInfoDel=0)
+    </select>
+
+    <select id="findCheckInByHomeNumber" parameterType="String" resultMap="checkInRomeTypeAndUserMap">
+        select * from t_checkininfo ci,t_roomtype rt,t_user u
+        where ci.checkInInfoRoomType=rt.roomTypeNum and ci.checkInInfoOperator=u.userIdentifier
+        and ci.checkInInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and ci.checkInInfoHomeNum=#{ci.checkInInfoHomeNum};
+    </select>
+
+    <select id="findCheckInByHuman" parameterType="String" resultMap="checkInRomeTypeAndUserMap">
+        select * from t_checkininfo ci,t_roomtype rt,t_user u
+        where ci.checkInInfoRoomType=rt.roomTypeNum and ci.checkInInfoOperator=u.userIdentifier
+        and ci.checkInInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and ci.checkInInfoHuman=#{ci.checkInInfoHuman};
+    </select>
+
+    <select id="findCheckInByType" parameterType="String" resultMap="checkInRomeTypeAndUserMap">
+        select * from t_checkininfo ci,t_roomtype rt,t_user u
+        where ci.checkInInfoRoomType=rt.roomTypeNum and ci.checkInInfoOperator=u.userIdentifier
+        and ci.checkInInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0
+        and ci.checkInInfoRoomType=#{ci.checkInInfoRoomType};
+    </select>
+
+    <select id="findAllCheckIn" resultMap="checkInRomeTypeAndUserMap">
+        select * from t_checkininfo ci,t_roomtype rt,t_user u
+        where ci.checkInInfoRoomType=rt.roomTypeNum and ci.checkInInfoOperator=u.userIdentifier
+        and ci.checkInInfoDel=0 and rt.roomTypeDel=0 and u.userDel=0;
+    </select>
+
+    <select id="find" parameterType="map" resultMap="checkInRomeTypeAndUserMap">
+
+        select * from t_checkininfo ci,t_roomtype rt,t_user u
+        <where>
+            ci.checkInInfoRoomType=rt.roomTypeNum and ci.checkInInfoOperator=u.userIdentifier
+            <if test="number != null and number != ''">
+                and checkInInfoHomeNum=#{number}
+            </if>
+            <if test="booker != null and booker != ''">
+                and checkInInfoHuman=#{booker}
+            </if>
+            <if test="type != null and type != ''">
+                and checkInInfoRoomType=#{type}
+            </if>
+        </where>
+
+    </select>
+
+
+</mapper>
+

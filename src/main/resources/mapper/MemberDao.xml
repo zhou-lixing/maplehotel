@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maplegroup.maplehotel.dao.IMemberDao">
+    <resultMap id="memberMap" type="Member">
+        <id column="memberId" property="memberId"/>
+        <result column="memberIdentifier" property="memberIdentifier"/>
+        <result column="memberName" property="memberName"/>
+        <result column="memberSex" property="memberSex"/>
+        <result column="memberPassword" property="memberPassword"/>
+        <result column="memberPhoneNumber" property="memberPhoneNumber"/>
+        <result column="memberAddress" property="memberAddress"/>
+        <result column="memberEmail" property="memberEmail"/>
+        <result column="memberIntegral" property="memberIntegral"/>
+        <result column="memberLevel" property="memberLevel"/>
+        <result column="memberLastCheckIn" property="memberLastCheckIn"/>
+        <result column="memberFinalBooking" property="memberFinalBooking"/>
+        <result column="memberRemark" property="memberRemark"/>
+        <result column="memberDel" property="memberDel"/>
+        <result column="memberRE" property="memberRE"/>
+    </resultMap>
+
+    <select id="findMemberByName" resultMap="memberMap" parameterType="String">
+        select * from t_member where memberDel=0 and memberName=#{memberName}
+    </select>
+    <select id="findMemberByIdentifier" resultMap="memberMap" parameterType="String">
+        select * from t_member where memberDel=0 and memberIdentifier=#{memberIdentifier}
+    </select>
+    <select id="findMemberByPhoneNumber" resultMap="memberMap" parameterType="String">
+        select * from t_member where memberDel=0 and memberPhoneNumber=#{memberPhoneNumber}
+    </select>
+    <select id="findMemberAll" resultMap="memberMap" parameterType="String">
+        select * from t_member where memberDel=0
+    </select>
+    <select id="findMaxIdentifier" resultType="String" parameterType="String">
+        select memberIdentifier from t_member where memberDel=0 and memberId=(select max(memberId) from t_member)
+    </select>
+
+    <update id="addMember" parameterType="Member">
+        insert into t_member(memberIdentifier,memberName,memberSex,memberPassword,memberPhoneNumber,
+                             memberAddress,memberIntegral,memberLevel,memberLastCheckIn,memberFinalBooking,
+                             memberDel)
+        value (#{memberIdentifier},#{memberName},#{memberSex},#{memberPassword},#{memberPhoneNumber},
+                #{memberAddress},#{memberIntegral},#{memberLevel},#{memberLastCheckIn},
+                #{memberFinalBooking},#{memberDel})
+    </update>
+
+    <update id="deleteMember" parameterType="String">
+        update t_member set memberDel=1 where memberDel=0 and memberName=#{memberName}
+    </update>
+    <update id="updateByIdentifier" parameterType="String">
+        update t_member set memberIntegral='2000' where memberDel=0 and memberIdentifier=#{memberIdentifier}
+    </update>
+    <update id="updateFinalBookingTime" parameterType="String">
+        update t_member set memberFinalBooking=now() where memberDel=0 and memberName=#{memberName}
+    </update>
+    <update id="updateLastCheckInTime" parameterType="String">
+        update t_member set memberLastCheckIn=now() where memberDel=0 and memberName=#{memberName}
+    </update>
+</mapper>

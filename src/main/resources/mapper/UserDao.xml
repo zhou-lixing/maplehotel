@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.IUserDao">
+    <resultMap type="User" id="userMap">
+        <id column="userId" property="userId"/>
+        <result column="userIdentifier" property="userIdentifier"/>
+        <result column="userUsername" property="userUsername"/>
+        <result column="userPassword" property="userPassword"/>
+        <result column="userPower" property="userPower"/>
+        <result column="userRemark" property="userRemark"/>
+        <result column="userDel" property="userDel"/>
+    </resultMap>
+
+    <resultMap id="userJournalMap" type="User" extends="userMap">
+        <!-- 配置一对多关系  user对Journal-->
+        <collection property="journals" ofType="Journal">
+            <id property="journalId" column="journalId"/>
+            <result property="journalOperate" column="journalOperate"/>
+            <result property="journalTime" column="journalTime"/>
+            <result property="journalRemark" column="journalRemark"/>
+            <result property="journalDel" column="journalDel"/>
+        </collection>
+    </resultMap>
+
+    <select id="getMaxId" resultType="String">
+        SELECT userIdentifier from t_user where userId=(SELECT max(userId) from t_user)
+    </select>
+    <select id="getUserPower" parameterType="String" resultType="int">
+        SELECT userPower from t_user where userUsername=#{userUsername} and userDel=0
+    </select>
+    <select id="findUserByUsername" parameterType="String" resultMap="userMap">
+        SELECT * from t_user where userUsername=#{userUsername} and userDel=0
+    </select>
+    <select id="findUserById" parameterType="String" resultMap="userMap">
+        SELECT * from t_user where userIdentifier=#{userIdentifier} and userDel=0
+    </select>
+    <update id="addUser" parameterType="User" >
+        insert into t_user
+        VALUES(
+                  DEFAULT,#{userIdentifier},#{userUsername},#{userPassword},#{userPower},#{userRemark},#{userDel},#{userRE}
+              )
+    </update>
+
+    <update id="deleteUser" parameterType="String">
+        UPDATE t_user set userDel=1 where userIdentifier=#{userIdentifier}
+    </update>
+
+    <update id="updateUser" parameterType="User">
+        UPDATE t_user set
+                          userPassword=#{userPassword},
+                          userPower=#{userPower},
+                          userRemark=#{userRemark}
+        where userUsername=#{userUsername}
+    </update>
+
+    <select id="findAllUser" resultMap="userMap">
+        select * from t_user where userDel=0
+    </select>
+
+
+
+</mapper>

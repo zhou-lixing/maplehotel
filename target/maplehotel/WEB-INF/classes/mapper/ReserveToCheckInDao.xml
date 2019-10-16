@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.IReserveToCheckInDao">
+
+    <!--<update id="addReserveToCheckIn" parameterType="CheckInInfo">-->
+        <!--insert into t_checkininfo-->
+        <!--values(#{checkInInfoId},#{checkInInfoCheckInNum},#{checkInInfoHomeNum},#{checkInInfoRoomType},-->
+               <!--#{checkInInfoStandardPrice},#{checkInInfoDiscountPrice},#{checkInInfoDeposit},#{checkInInfoHuman},-->
+               <!--#{checkInInfoCertificateType},#{checkInInfoCertificateNum},#{checkInInfoPhone},#{checkInInfoArrivalTime},-->
+               <!--#{checkInInfoLeaveTime},#{checkInInfoHumanNum},#{checkInInfoOperator},#{checkInInfoVipNum},-->
+               <!--#{checkInInfoVipPrice},#{checkInInfoBreakfast},#{checkInInfoWakeUp} ,#{checkInInfoRemark},#{checkInInfoDel},null);-->
+
+    <!--</update>-->
+
+    <!--<update id="delReserve" parameterType="String">-->
+        <!--update t_reserveinfo set reserveInfoDel=1 where reserveInfoDel=0 and reserveInfoRoomNumber=#{reserveInfoRoomNumber};-->
+    <!--</update>-->
+
+</mapper>
+

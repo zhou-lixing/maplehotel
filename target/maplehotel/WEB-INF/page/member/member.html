@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<!--
+    	作者：offline
+    	时间：2019-09-09
+    	描述：需要改的地方
+    	1.页面标题 DemoPage
+    	2.活动页面 class=active
+    	3.头部导航栏中的页面标题
+    	4.左侧导航中与其他页面链接的href
+    -->
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap-clearmin.min.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/roboto.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/material-design.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/small-n-flat.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css">
+		<title>MapleHotel</title>
+	</head>
+
+	<body class="cm-no-transition cm-1-navbar">
+		<!--
+        	作者：offline
+        	时间：2019-09-09
+        	描述：左侧导航栏
+        -->
+		<div id="cm-menu">
+			<nav class="cm-navbar cm-navbar-primary">
+				<div class="cm-flex">
+					<a href="../index/index.do" class="cm-logo"></a>
+				</div>
+				<div class="btn btn-primary md-menu-white" data-toggle="cm-menu"></div>
+			</nav>
+			<div id="cm-menu-content">
+				<div id="cm-menu-items-wrapper">
+					<div id="cm-menu-scroller">
+						<ul class="cm-menu-items">
+							<li>
+								<a href="../index/index.do" class="sf-house">主页</a>
+							</li>
+							<li class="cm-submenu">
+								<a href="#" class="sf-profile-group">房客管理<span class="caret"></span></a>
+								<ul>
+									<li>
+										<a href="../ly/roomReserve.do">客房预订</a>
+									</li>
+									<li>
+										<a href="../ly/checkInRegistList.do">入住登记</a>
+									</li>
+									
+								</ul>
+							</li>
+							<li>
+								<a class="sf-money" href="../consume/consumeConsume.do">消费管理</a>
+							</li>
+							<li class="cm-submenu pre-open">
+								<a class="sf-bubbles-alt">基础信息管理<span class="caret"></span></a>
+								<ul>
+									<li class="active">
+										<a href="../member/memberView.do">会员</a>
+									</li>
+									<li>
+										<a href="../goods/goodsView.do">商品</a>
+									</li>
+									<li>
+										<a href="../room/roomView.do">客房信息</a>
+									</li>
+									<li>
+										<a href="../goodsType/goodsTypeView.do">商品类别</a>
+									</li>
+									<li>
+										<a href="../roomType/roomTypeView.do">客房类型</a>
+									</li>
+									<li>
+										<a href="../floor/floorView.do">楼层</a>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#" class="sf-dashboard"></a>
+							</li>
+							<li>
+								<a href="../journal/journal.do" class="sf-notepad">日志管理</a>
+							</li>
+							<li class="cm-submenu">
+								<a href="#" class="sf-file-excel">报表管理<span class="caret"></span></a>
+								<ul>
+									<li>
+										<a href="../reserve/reserve.do">预定客人报表</a>
+									</li>
+									<li>
+										<a href="../reserve/guestsStaying.do">在住客人报表</a>
+									</li>
+									<li>
+										<a href="../reserve/guestsOutgoing.do">离店客人报表</a>
+									</li>
+									<li>
+										<a href="../reserve/financeAccounting.do">财务进账报表</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--
+        	作者：offline
+        	时间：2019-09-09
+        	描述：头部导航栏
+        -->
+		<header id="cm-header">
+			<nav class="cm-navbar cm-navbar-primary">
+				<div class="btn btn-primary md-menu-white hidden-md hidden-lg" data-toggle="cm-menu"></div>
+				<div class="cm-flex">
+					<h1>会员</h1>
+				</div>
+				<div class="dropdown pull-right">
+					<button class="btn btn-primary md-account-circle-white" data-toggle="dropdown"></button>
+					<ul class="dropdown-menu">
+						<li class="disabled text-center">
+							<a style="cursor:default;"><strong id="user"></strong></a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="../user/userInfo.do"><i class="fa fa-fw fa-user"></i> 用户信息</a>
+						</li>
+						<li>
+							<a href="../user/userSettings.do"><i class="fa fa-fw fa-cog"></i> 用户管理</a>
+						</li>
+						<li>
+							<a href="../user/logout.do"><i class="fa fa-fw fa-sign-out"></i> 注销登录</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<!--
+        	作者：offline
+        	时间：2019-09-09
+        	描述：页面主要内容
+        -->
+		<div id="global">
+			<div class="container-fluid cm-container-white">
+				<form action="../member/findMember.do" method="post" id="findForm">
+					<div class="input-group mb-3" style="display: flex;">
+						<input type="text" class="form-control" placeholder="请输入您的姓名">
+						<div class="input-group-append" style="margin-left: 5px;">
+							<button class="btn btn-outline-secondary" type="submit" id="button-search" style="font-weight: bold;width: 200px;">搜索</button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<div class="container-fluid">
+				<!--
+                	作者：offline
+                	时间：2019-09-09
+                	描述：写页面的主要内容
+               -->
+				<div id="body">
+					<div class="text-center mb-4">
+						<h1 class="h3 mb-3 font-weight-normal">会员信息</h1>
+					</div>
+					<table class="table table-hover" width="100%">
+						<thead>
+							<tr>
+								<th scope="col">编号</th>
+								<th scope="col">姓名</th>
+								<th scope="col">性别</th>
+								<th scope="col">级别</th>
+								<th scope="col">备注</th>
+								<th scope="col">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+
+					</table>
+				</div>
+				<footer class="cm-footer"><span class="pull-left">MapleHotel</span><span class="pull-right">&copy; MapleGroup</span></footer>
+			</div>
+			
+		</div>
+		<script src="../assets/js/lib/jquery-2.1.3.min.js"></script>
+		<script src="../assets/js/jquery.mousewheel.min.js"></script>
+		<script src="../assets/js/jquery.cookie.min.js"></script>
+		<script src="../assets/js/fastclick.min.js"></script>
+		<script src="../assets/js/bootstrap.min.js"></script>
+		<script src="../assets/js/clearmin.min.js"></script>
+		<script src="../assets/js/demo/home.js"></script>
+		<script src="../assets/js/jquery.form.js"></script>
+
+	<script>
+        $.ajax({
+            url: "../member/findMemberAll.do",
+            dataType: "json",
+            success: function (data) {
+                $.each(data,(i,e) => {
+                    let strTrContent = [
+                        '<td scope="row">',e.memberIdentifier,'</td>',
+                        '<td scope="row">',e.memberName,'</td>',
+                        '<td>',e.memberSex,'</td>',
+                        '<td>',e.memberLevel,'</td>',
+                        '<td>',e.memberRemark,'</td>',
+                        '<td>',
+                        '<button class="btn btn-outline-danger" onclick="change(\'',e.memberName,'\')"><i class="fa fa-pencil"></i></button>',
+                        '<button class="btn btn-outline-danger" onclick="del(\'',e.memberName,'\')"><i class="fa fa-trash-o"></i></button>',
+                        '</td>']
+                    let $tr = $('<tr>'+strTrContent.join('')+'</tr>')
+                    $(".table.table-hover tbody").append($tr);
+                });
+            }
+        })
+
+        function del(delName) {
+            $.ajax({
+                url: "../member/deleteMember/" + delName + ".do",
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+                        alert("删除成功！")
+                    } else {
+                        alert("删除失败!")
+                    }
+                }
+            })
+        }
+
+	</script>
+
+		<script>
+            $.ajax({
+                url: "../user/userInfoContent.do",//请求路径
+                dataType: "json",	//响应类型
+                success: function(response){	//响应成功的回调函数，response响应数据
+                    $("#user").append(response.username);
+                }
+            });
+		</script>
+	</body>
+
+</html>

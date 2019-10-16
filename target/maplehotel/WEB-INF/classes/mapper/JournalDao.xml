@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	namespace 访问的路径
+	select 查询操作
+	selectTUserByID 自定义的访问名
+	parameterType 传参类型
+	resultType 返回类型 对应了 config.xml中<typeAlias>
+	要执行的SQL语句
+ -->
+<mapper namespace="com.maplegroup.maplehotel.dao.IJournalDao">
+<resultMap id="journalMap" type="Journal">
+    <id column="journalId" property="journalId"/>
+    <result column="journalOperate" property="journalOperate"/>
+    <result column="journalTime" property="journalTime"/>
+    <result column="journalRemark" property="journalRemark"/>
+    <result column="journalDel" property="journalDel"/>
+    <result column="journalRE" property="journalRE"/>
+</resultMap>
+    <resultMap id="journalUserMap" type="Journal" extends="journalMap">
+        <association property="user" javaType="User">
+            <id column="userId" property="userId"/>
+            <result column="userIdentifier" property="userIdentifier"/>
+            <result column="userUsername" property="userUsername"/>
+            <result column="userPassword" property="userPassword"/>
+            <result column="userPower" property="userPower"/>
+            <result column="userRemark" property="userRemark"/>
+            <result column="userDel" property="userDel"/>
+        </association>
+    </resultMap>
+    <select id="findAllJournal" resultMap="journalUserMap">
+        select * from t_user u, t_journal j where journalDel=0 and j.journalUsername=u.userIdentifier
+    </select>
+    <select id="findJournalByUsername"  resultMap="journalUserMap" parameterType="String">
+        select * from t_user u, t_journal j
+        where journalDel=0 and j.journalUsername=u.userIdentifier and u.userUsername=#{userUsername}
+    </select>
+    <select id="findDateJournal" resultMap="journalUserMap">
+        select * from t_user u,t_journal j
+        where
+              journalDel=0
+          and j.journalUsername=u.userIdentifier
+          and journalTime&gt;=#{arg0}
+          and journalTime&lt;=#{arg1}
+    </select>
+
+
+    <update id="addJournal" parameterType="Journal">
+        insert  into t_journal values(
+                                      default ,
+                                      #{journalUserName},
+                                      #{journalOperate},
+                                      now(),
+                                      #{journalRemark},
+                                      0,
+                                      #{journalRE}
+                                     )
+    </update>
+</mapper>
